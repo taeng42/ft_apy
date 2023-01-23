@@ -10,8 +10,8 @@ setup(
         author_email        = "hyundong@42seoul.kr",
         license             = "mit",
         #packages            = find_packages(exclude = []),
+        install_requires    = ["setuptools", "wheel", "urllib3"],
         packages            = ["ft_apy"],
-        install_requires    = [],
         zip_safe            = False,
         python_requires     = '>=3',
         classifiers         = [
