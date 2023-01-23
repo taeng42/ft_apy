@@ -10,7 +10,7 @@ setup(
         author_email        = "hyundong@42seoul.kr",
         license             = "mit",
         #packages            = find_packages(exclude = []),
-        packages            = [],
+        packages            = ["ft_apy"],
         install_requires    = [],
         zip_safe            = False,
         python_requires     = '>=3',
