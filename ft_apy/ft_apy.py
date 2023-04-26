@@ -158,8 +158,9 @@ class Api(object):
 		resp = self.session.request("POST", f"{ENDPOINT}/oauth/token", fields=auth_data)
 		print(resp.status)
 		parsed_resp = json.loads(resp.data.decode('utf-8'))
-		print("token generated. Expires in:", parsed_resp["expires_in"], "seconds")
-		self.expired_at = int(time.time()) + parsed_resp["expires_in"]
+		if 'expires_in' in parsed_resp:
+			print("token generated. Expires in:", parsed_resp["expires_in"], "seconds")
+			self.expired_at = int(time.time()) + parsed_resp["expires_in"]
 		return parsed_resp["access_token"]
 
 
