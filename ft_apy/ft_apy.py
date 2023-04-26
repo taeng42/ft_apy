@@ -161,6 +161,8 @@ class Api(object):
 		if 'expires_in' in parsed_resp:
 			print("token generated. Expires in:", parsed_resp["expires_in"], "seconds")
 			self.expired_at = int(time.time()) + parsed_resp["expires_in"]
+		if 'access_token' not in parsed_resp:
+			return None
 		return parsed_resp["access_token"]
 
 
