@@ -130,6 +130,7 @@ class Api(object):
 		self.__token = token
 		self.redirect = redirect
 		self.session = urllib3.PoolManager()
+		self.good = False
 		if self.__token is None:
 			self.__token = self.authenticate()
 
@@ -137,6 +138,7 @@ class Api(object):
 		self.call_cnt = 0
 
 	def authenticate(self):
+		self.good = False
 		self.session.clear()
 		if self.req_code:
 			# 3 legged authentication
@@ -163,6 +165,7 @@ class Api(object):
 			self.expired_at = int(time.time()) + parsed_resp["expires_in"]
 		if 'access_token' not in parsed_resp:
 			return None
+		self.good = True
 		return parsed_resp["access_token"]
 
 
