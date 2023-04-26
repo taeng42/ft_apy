@@ -158,13 +158,12 @@ class Api(object):
 				"client_secret": self.secret
 			}
 		resp = self.session.request("POST", f"{ENDPOINT}/oauth/token", fields=auth_data)
-		print(resp.status)
-		parsed_resp = json.loads(resp.data.decode('utf-8'))
-		if 'expires_in' in parsed_resp:
-			print("token generated. Expires in:", parsed_resp["expires_in"], "seconds")
-			self.expired_at = int(time.time()) + parsed_resp["expires_in"]
-		if 'access_token' not in parsed_resp:
+		if 400 <= resp.status < 500:
+			print(resp.status)
 			return None
+		parsed_resp = json.loads(resp.data.decode('utf-8'))
+		print("token generated. Expires in:", parsed_resp["expires_in"], "seconds")
+		self.expired_at = int(time.time()) + parsed_resp["expires_in"]			
 		self.good = True
 		return parsed_resp["access_token"]
 
