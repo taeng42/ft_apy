@@ -46,17 +46,36 @@ class HttpRequest(object):
 
 		return f"?{parsed_param}"
 
-	def get(self):
-		try:
-			resp = self.session.request("GET", self.url + self.parse_params())
-		except urllib3.exceptions.HTTPError as e:
-			print(e)
-			return {}
-		if 400 <= resp.status < 600:
-			print(resp.status)
-			print(resp.data.decode('utf-8'))
-			return {}
-		return json.loads(resp.data.decode('utf-8'))
+	def get(self, data: json or None=None):
+		if data is None:
+			try:
+				resp = self.session.request("GET", self.url + self.parse_params())
+			except urllib3.exceptions.HTTPError as e:
+				print(e)
+				return {}
+			if 400 <= resp.status < 600:
+				print(resp.status)
+				print(resp.data.decode('utf-8'))
+				return {}
+			return json.loads(resp.data.decode('utf-8'))
+		else:
+			try:
+				body = json.dumps(data).encode('utf-8')
+				headers = {
+					'Authorization': self.session.headers['Authorization'],
+					'Content-Type': "application/json"
+				}
+				resp = self.session.request("PUT", self.url, body=body, headers=headers)
+			try:
+				resp = self.session.request("GET", self.url + self.parse_params())
+				except urllib3.exceptions.HTTPError as e:
+					print(e)
+					return {}
+				if 400 <= resp.status < 600:
+					print(resp.status)
+					print(resp.data.decode('utf-8'))
+					return {}
+				return json.loads(resp.data.decode('utf-8'))
 
 	def put(self, data: json):
 		try:
