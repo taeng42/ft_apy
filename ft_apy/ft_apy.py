@@ -160,6 +160,7 @@ class Api(object):
 		self.session.clear()
 		if self.req_code:
 			# 3 legged authentication
+			print("3 legged!!", flush=True)
 			auth_data = {
 				"grant_type": "authorization_code",
 				"client_id": self.uid,
@@ -170,6 +171,7 @@ class Api(object):
 			}
 		else:
 			# 2 legged authentication
+			print("2 legged!!", flush=True)
 			auth_data = {
 				"grant_type": "client_credentials",
 				"client_id": self.uid,
