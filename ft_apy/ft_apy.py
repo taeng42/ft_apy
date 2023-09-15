@@ -164,6 +164,7 @@ class Api(object):
 				"grant_type": "authorization_code",
 				"client_id": self.uid,
 				"client_secret": self.secret,
+				"scope": "public profile projects tig elearning forum",
 				"code": self.req_code,
 				"redirect_uri": self.redirect
 			}
