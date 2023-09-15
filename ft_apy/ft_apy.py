@@ -158,6 +158,7 @@ class Api(object):
 	def authenticate(self):
 		self.good = False
 		self.session.clear()
+		print("self.req_code:", self.req_code, flush=True)
 		if self.req_code:
 			# 3 legged authentication
 			print("3 legged!!", flush=True)
