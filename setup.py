@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
         name                = "ft_apy",
-        version             = "0.0.5",
+        version             = "0.0.6",
         description         = "42api Library for Python3",
         url                 = "https://github.com/taeng42/ft_apy.git",
         author              = "Hyundong",
