@@ -51,11 +51,11 @@ class HttpRequest(object):
 			try:
 				resp = self.session.request("GET", self.url + self.parse_params())
 			except urllib3.exceptions.HTTPError as e:
-				print(e)
+				print(e, flush=True)
 				return {}
 			if 400 <= resp.status < 600:
-				print(resp.status)
-				print(resp.data.decode('utf-8'))
+				print(resp.status, flush=True)
+				print(resp.data.decode('utf-8'), flush=True)
 				return {}
 			return json.loads(resp.data.decode('utf-8'))
 		else:
@@ -67,13 +67,13 @@ class HttpRequest(object):
 				}
 				resp = self.session.request("GET", self.url + self.parse_params(), body=body, headers=headers)
 			except urllib3.exceptions.HTTPError as e:
-				print(e)
+				print(e, flush=True)
 				return {}
 			if 400 <= resp.status < 600:
-				print(resp.status)
-				print(resp.data.decode('utf-8'))
+				print(resp.status, flush=True)
+				print(resp.data.decode('utf-8'), flush=True)
 				return {}
-			return json.loads(resp.data.decode('utf-8'))
+			return json.loads(resp.data.decode('utf-8'), flush=True)
 
 	def put(self, data: json):
 		try:
@@ -84,11 +84,11 @@ class HttpRequest(object):
 			}
 			resp = self.session.request("PUT", self.url, body=body, headers=headers)
 		except urllib3.exceptions.HTTPError as e:
-			print(e)
+			print(e, flush=True)
 			return {}
 		if 400 <= resp.status < 600:
-			print(resp.status)
-			print(resp.data.decode('utf-8'))
+			print(resp.status, flush=True)
+			print(resp.data.decode('utf-8'), flush=True)
 			return {}
 		return resp
 
@@ -101,11 +101,11 @@ class HttpRequest(object):
 			}
 			resp = self.session.request("POST", self.url, body=body, headers=headers)
 		except urllib3.exceptions.HTTPError as e:
-			print(e)
+			print(e, flush=True)
 			return {}
 		if 400 <= resp.status < 600:
-			print(resp.status)
-			print(resp.data.decode('utf-8'))
+			print(resp.status, flush=True)
+			print(resp.data.decode('utf-8'), flush=True)
 			return {}
 		return resp
 
@@ -118,11 +118,11 @@ class HttpRequest(object):
 			}
 			resp = self.session.request("PATCH", self.url, body=body, headers=headers)
 		except urllib3.exceptions.HTTPError as e:
-			print(e)
+			print(e, flush=True)
 			return {}
 		if 400 <= resp.status < 600:
-			print(resp.status)
-			print(resp.data.decode('utf-8'))
+			print(resp.status, flush=True)
+			print(resp.data.decode('utf-8'), flush=True)
 			return {}
 		return resp
 
@@ -130,11 +130,11 @@ class HttpRequest(object):
 		try:
 			resp = self.session.request("DELETE", self.url)
 		except urllib3.exceptions.HTTPError as e:
-			print(e)
+			print(e, flush=True)
 			return {}
 		if 400 <= resp.status < 500:
-			print(resp.status)
-			print(resp.data.decode('utf-8'))
+			print(resp.status, flush=True)
+			print(resp.data.decode('utf-8'), flush=True)
 			return {}
 		return resp
 
@@ -158,10 +158,10 @@ class Api(object):
 	def authenticate(self):
 		self.good = False
 		self.session.clear()
-		print("self.req_code:", self.req_code, flush=True)
+		#print("self.req_code:", self.req_code, flush=True)
 		if self.req_code:
 			# 3 legged authentication
-			print("3 legged!!", flush=True)
+			#print("3 legged!!", flush=True)
 			auth_data = {
 				"grant_type": "authorization_code",
 				"client_id": self.uid,
@@ -172,7 +172,7 @@ class Api(object):
 			}
 		else:
 			# 2 legged authentication
-			print("2 legged!!", flush=True)
+			#print("2 legged!!", flush=True)
 			auth_data = {
 				"grant_type": "client_credentials",
 				"client_id": self.uid,
@@ -181,10 +181,10 @@ class Api(object):
 			}
 		resp = self.session.request("POST", f"{ENDPOINT}/oauth/token", fields=auth_data)
 		if 400 <= resp.status < 500:
-			print(resp.status)
+			print(resp.status, flush=True)
 			return None
 		parsed_resp = json.loads(resp.data.decode('utf-8'))
-		print("token generated. Expires in:", parsed_resp["expires_in"], "seconds")
+		#print("token generated. Expires in:", parsed_resp["expires_in"], "seconds", flush=True)
 		self.expired_at = int(time.time()) + parsed_resp["expires_in"]			
 		self.good = True
 		return parsed_resp["access_token"]
@@ -194,10 +194,10 @@ class Api(object):
 		cur = int(time.time())
 		if self.expired_at <= cur + 1:  # 1초 안에 이 토큰의 수명이 끝난다면
 			# 1초를 기다리고 재발급한다.
-			print("[🔒💣] TOKEN expires in 1 seconds")
-			print("[⏳] Sleep 1 seconds . . ")
+			#print("[🔒💣] TOKEN expires in 1 seconds", flush=True)
+			#print("[⏳] Sleep 1 seconds . . ", flush=True)
 			sleep(1.0)
-			print("[🔐] RELOAD TOKEN !!")
+			#print("[🔐] RELOAD TOKEN !!", flush=True)
 			self.session = urllib3.PoolManager()
 			self.__token = self.authenticate()
 			self.session.headers.update({"Authorization": f"Bearer {self.__token}"})
@@ -208,5 +208,5 @@ class Api(object):
 		return HttpRequest(target, self.session, **kwargs)
 
 	def print_token(self):
-		print(type(self.__token))
-		print(self.__token)
+		print(type(self.__token), flush=True)
+		print(self.__token, flush=True)
